@@ -8,7 +8,8 @@ using namespace std;
  * PROJECT: Linked List Exercise
  * PROGRAMMER: Nat Smolcic
  * DATE: Jan 16 2023
- * DESCRIPTION: Example of a simple, unsorted linked list used to create an address book
+ * DESCRIPTION: Example of a simple, unsorted linked list used to create an address book. 
+ *				This program can add info into the linked list, delete individual nodes, search nodes, and print a found node. 
  */
 
 
@@ -61,7 +62,7 @@ int main() {
 	while (1) {
 		// prompt user for input 
 		printf("Press 'X' to delete a list entry, 'Z' to stop filling in address book information, \n");
-		printf("or 'N' to input a new entry to the address book.\n");
+		printf("'F' to find and print an entry, or 'N' to input a new entry to the address book.\n");
 		char userInput[51];
 
 		// if user wishes to break loop
@@ -74,7 +75,7 @@ int main() {
 			delete_node(head);
 		}
 
-		// rest of loop is so that the user can add a new entry to the linked list 
+		// if user wishes to add an entry
 		else if (strcmp(userInput, "N") == 0) {
 
 			// always initialize new node to NULL
@@ -97,23 +98,26 @@ int main() {
 			fill_node(node->info);
 		}
 
+		// if user wishes to find and print an entry
+		else if (strcmp(userInput, "F") == 0) {
+			// get user input to declare the string we are trying to find
+			char findName[51];
+			printf("Please input the name of the person's address you'd like to find. Hit enter when done.\n");
+			printf("Make sure there is no extra whitespace at the end of the name.");
+			fgets(findName, 51, stdin);
+
+			// find the given node and assign it to a variable
+			addressNode* foundNode = find_node(head, findName);
+
+			// print the given node to the screen
+			printf("Name: %s\nAddress: %s\nNumber: %s\n", foundNode->info.name, foundNode->info.address, foundNode->info.phone);
+		}
+
+		// if the user inputs some invalid letter code 
 		else {
 			printf("ERROR : Invalid Input");
 		}
 	}
-
-
-	// get user input to declare the string we are trying to find
-	char findName[51];
-	printf("Please input the name of the person's address you'd like to find. Hit enter when done.\n");
-	printf("Make sure there is no extra whitespace at the end of the name.");
-	fgets(findName, 51, stdin);
-
-	// find the given node and assign it to a variable
-	addressNode* foundNode = find_node(head, findName);
-
-	// print the given node to the screen
-	printf("Name: %s\nAddress: %s\nNumber: %s\n", foundNode->info.name, foundNode->info.address, foundNode->info.phone);
 
 	// freeing the memory
 	delete_info(head);
