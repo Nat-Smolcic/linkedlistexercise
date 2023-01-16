@@ -33,6 +33,8 @@ addressNode* find_node(addressNode* head, char findName[51]);
 
 void fill_node(addressInfo* node);
 
+void delete_node(addressNode* head);
+
 
 
 int main() {
@@ -57,30 +59,47 @@ int main() {
 	fill_node(head->info);
 
 	while (1) {
-		printf("Press 'X' to stop filling in address book information.");
+		// prompt user for input 
+		printf("Press 'X' to delete a list entry, 'Z' to stop filling in address book information, \n");
+		printf("or 'N' to input a new entry to the address book.\n");
 		char userInput[51];
-		if (strcmp(userInput, "X") == 0) {
+
+		// if user wishes to break loop
+		if (strcmp(userInput, "Z") == 0) {
 			break;
 		}
 
-		// always initialize new node to NULL
-		struct addressNode* node = NULL;
-
-		// allocate memory for a new node
-		addressNode* block = (addressNode*)malloc(sizeof(addressNode));
-
-		// always check malloc() return value
-		if (block == NULL) {
-			printf("ERROR : Unable to allocate memory for new node\n");
+		// if user wishes to delete an entry
+		else if (strcmp(userInput, "X") == 0) {
+			delete_node(head);
 		}
 
-		// assign the address of the newly allocated block to the new node variable
-		if (node == NULL) {
-			node == block;
-			block->next = NULL;
+		// rest of loop is so that the user can add a new entry to the linked list 
+		else if (strcmp(userInput, "N") == 0) {
+
+			// always initialize new node to NULL
+			struct addressNode* node = NULL;
+
+			// allocate memory for a new node
+			addressNode* block = (addressNode*)malloc(sizeof(addressNode));
+
+			// always check malloc() return value
+			if (block == NULL) {
+				printf("ERROR : Unable to allocate memory for new node\n");
+			}
+
+			// assign the address of the newly allocated block to the new node variable
+			if (node == NULL) {
+				node == block;
+				block->next = NULL;
+			}
+
+			fill_node(node->info);
 		}
 
-		fill_node(node->info);
+		else {
+			printf("ERROR : Invalid Input");
+		}
 	}
 
 
@@ -95,6 +114,9 @@ int main() {
 
 	// print the given node to the screen
 	printf("Name: %s\nAddress: %s\nNumber: %s\n", foundNode->info.name, foundNode->info.address, foundNode->info.phone);
+
+	// freeing the memory
+	delete_info(head);
 
 	return 0;
 }
@@ -158,5 +180,33 @@ void fill_node(addressInfo* node) {
 	node->name = name;
 	node->address = address;
 	node->phone = phone;
+}
+
+
+// FUNCTION: delete_node()
+// PARAMETERS: addressNode* head: the pointer to the head of the linked list
+// RETURN VALUES: none
+// DESCRIPTION: prompts the user for the name of a node to delete from the given linked list
+void delete_node(addressNode* head) {
+	// prompt user for name to delete
+	char name[51];
+	printf("Please input the name of the person's entry you'd like to delete: ");
+	fgets(name, 51, stdin);
+
+	// find the node to delete
+	addressNode* pNode = head;
+	addressNode* prevNode = NULL;
+
+	while (strcmp(pNode->info.name, name) != 0) {
+		prevNode = pNode;
+		pNode = pNode->next;
+	}
+
+	// link the previous node to the node after the current node
+	addressNode* nextNode = pNode->next;
+	prevNode->next = nextNode->next;
+
+	// delete the current node
+	free(pNode);
 }
 
